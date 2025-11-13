@@ -17,7 +17,7 @@ A web-based synthesizer and sequencer with ESP32 hardware integration.
 2. **Install Node.js** from https://nodejs.org
 3. **Run these commands:**
 ```bash
-git clone https://github.com/mokshapiyu0719/hardware-groovebox
+git clone https://github.com/moksha0719/Hardware-Project_GrooveBox
 cd hardware-groovebox
 npm install
 npm start
