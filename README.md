@@ -21,5 +21,6 @@ git clone https://github.com/mokshapiyu0719/hardware-groovebox
 cd hardware-groovebox
 npm install
 npm start
+```
 ## ESP32 Support
 Includes examples for ESP32 hardware control via HTTP API.
