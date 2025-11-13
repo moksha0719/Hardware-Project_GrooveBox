@@ -11,7 +11,7 @@ A web-based synthesizer and sequencer with ESP32 hardware integration.
 - 💾 Pattern saving/loading
 
 ## Installation
-1. Clone repository: `git clone https://github.com/yourusername/hardware-groovebox`
+1. Clone repository: `git clone https://github.com/mokshapiyu0719/hardware-groovebox`
 2. Install: `npm install`
 3. Run: `npm start`
 4. Open: http://localhost:3001
