@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware Groovebox</title>
+    <link rel="stylesheet" href="CSS.css">
+</head>
+<body>
+    <div class="app">
+        <!-- HEADER -->
+        <div class="header">
+            <div>
+                <h1>GROOVEBOX</h1>
+                <div class="subtitle">5-Module MCU-Based Desktop Synthesizer</div>
+            </div>
+            
+            <div class="transport-bar">
+                <button class="transport-btn" id="playBtn" title="Play">▶</button>
+                <button class="transport-btn rec" id="recBtn" title="Record">⏺</button>
+                <button class="transport-btn" id="stopBtn" title="Stop">⏹</button>
+                <div class="bpm-display" id="bpmDisplay">120</div>
+                <input type="range" id="bpmSlider" min="60" max="200" value="120">
+            </div>
+            
+            <div class="connection-panel">
+                <div class="status-pills">
+                    <div class="pill connected" id="wsStatus">I2C: Connected</div>
+                    <div class="pill" id="cpuStatus">DSP: 32%</div>
+                </div>
+                <div class="input-group">
+                    <input id="hostInput" value="groovebox.local" placeholder="Web Interface">
+                    <button class="btn" id="connectBtn">Connect</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SYNTH/VOCODER MODULE -->
+        <div class="osc-section card">
+            <div class="card-title">Module 1: Synth/Vocoder</div>
+            <div class="module-status">ANALOG VCO/VCF/VCA | JUNO-STYLE | VOCODER</div>
+            <div class="tabs">
+                <button class="active" data-osc="A">VCO 1</button>
+                <button data-osc="B">VCO 2</button>
+                <button data-osc="VOCODER">VOCODER</button>
+            </div>
+            
+            <div class="osc-content" data-osc-panel="A">
+                <div class="wave-selector">
+                    <div class="wave-btn active" data-wave="sine" title="Sine">~</div>
+                    <div class="wave-btn" data-wave="tri" title="Triangle">△</div>
+                    <div class="wave-btn" data-wave="saw" title="Saw">⊿</div>
+                    <div class="wave-btn" data-wave="square" title="Square">⊓</div>
+                </div>
+                <div class="knob-grid">
+                    <div class="knob-wrap">
+                        <div class="knob" data-osc="A" data-param="pitch"><div class="indicator"></div></div>
+                        <div class="label">Pitch</div>
+                        <div class="value-display">0.50</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob" data-osc="A" data-param="pwm"><div class="indicator"></div></div>
+                        <div class="label">PWM</div>
+                        <div class="value-display">0.50</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob" data-osc="A" data-param="level"><div class="indicator"></div></div>
+                        <div class="label">Level</div>
+                        <div class="value-display">0.50</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob" data-osc="A" data-param="detune"><div class="indicator"></div></div>
+                        <div class="label">Detune</div>
+                        <div class="value-display">0.50</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="osc-content" data-osc-panel="VOCODER" style="display:none">
+                <div class="vocoder-display">
+                    <div class="vocoder-bands">
+                        <div class="vocoder-band" style="height: 80%"></div>
+                        <div class="vocoder-band" style="height: 65%"></div>
+                        <div class="vocoder-band" style="height: 90%"></div>
+                        <div class="vocoder-band" style="height: 45%"></div>
+                        <div class="vocoder-band" style="height: 70%"></div>
+                        <div class="vocoder-band" style="height: 55%"></div>
+                        <div class="vocoder-band" style="height: 85%"></div>
+                        <div class="vocoder-band" style="height: 60%"></div>
+                    </div>
+                </div>
+                <div class="knob-grid">
+                    <div class="knob-wrap">
+                        <div class="knob" data-osc="VOCODER" data-param="bands"><div class="indicator"></div></div>
+                        <div class="label">Bands</div>
+                        <div class="value-display">16</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob" data-osc="VOCODER" data-param="level"><div class="indicator"></div></div>
+                        <div class="label">Level</div>
+                        <div class="value-display">0.50</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob" data-osc="VOCODER" data-param="effect"><div class="indicator"></div></div>
+                        <div class="label">Effect</div>
+                        <div class="value-display">0.50</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULATION PANEL MODULE -->
+        <div class="env-section card">
+            <div class="card-title">Module 3: Modulation Panel</div>
+            <div class="module-status">ADSR | LFO | THEREMIN | FILTERING</div>
+            <div class="tabs">
+                <button class="active" data-env="ENV1">ADSR 1</button>
+                <button data-env="LFO1">LFO 1</button>
+                <button data-env="THEREMIN">THEREMIN</button>
+            </div>
+            
+            <div class="env-content" data-env-panel="ENV1">
+                <svg class="env-visual" viewBox="0 0 200 80" preserveAspectRatio="none">
+                    <path class="env-curve" d="M 0 80 L 30 10 L 60 10 L 100 40 L 140 40 L 200 80"></path>
+                </svg>
+                <div class="knob-grid" style="grid-template-columns:repeat(4,1fr)">
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="ENV1" data-param="attack"><div class="indicator"></div></div>
+                        <div class="label">Attack</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="ENV1" data-param="decay"><div class="indicator"></div></div>
+                        <div class="label">Decay</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="ENV1" data-param="sustain"><div class="indicator"></div></div>
+                        <div class="label">Sustain</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="ENV1" data-param="release"><div class="indicator"></div></div>
+                        <div class="label">Release</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="env-content" data-env-panel="THEREMIN" style="display:none">
+                <div class="theremin-visual">
+                    <div class="theremin-field">
+                        <div class="theremin-hand" id="thereminHand"></div>
+                    </div>
+                </div>
+                <div class="knob-grid" style="grid-template-columns:repeat(2,1fr)">
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="THEREMIN" data-param="pitch"><div class="indicator"></div></div>
+                        <div class="label">Pitch Range</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="THEREMIN" data-param="volume"><div class="indicator"></div></div>
+                        <div class="label">Volume Range</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DRUM SAMPLER MODULE -->
+        <div class="lfo-section card">
+            <div class="card-title">Module 2: Drum Sampler</div>
+            <div class="module-status">ANALOG DRUM ENGINE | ESP32 | WAV PLAYBACK</div>
+            <div class="tabs">
+                <button class="active" data-lfo="KICK">KICK</button>
+                <button data-lfo="SNARE">SNARE</button>
+                <button data-lfo="HIHAT">HIHAT</button>
+                <button data-lfo="SAMPLER">SAMPLER</button>
+            </div>
+            
+            <div class="lfo-content" data-lfo-panel="KICK">
+                <div class="drum-visual">
+                    <div class="drum-waveform"></div>
+                </div>
+                <div class="knob-grid" style="grid-template-columns:repeat(3,1fr)">
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="KICK" data-param="pitch"><div class="indicator"></div></div>
+                        <div class="label">Pitch</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="KICK" data-param="decay"><div class="indicator"></div></div>
+                        <div class="label">Decay</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="KICK" data-param="tone"><div class="indicator"></div></div>
+                        <div class="label">Tone</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lfo-content" data-lfo-panel="SAMPLER" style="display:none">
+                <div class="sampler-display">
+                    <div class="sample-waveform">
+                        <div class="waveform-container" id="sampleWaveform"></div>
+                    </div>
+                    <div class="sampler-controls">
+                        <button class="btn sampler-btn" id="loadSample">Load WAV</button>
+                        <button class="btn sampler-btn" id="recordSample">Record</button>
+                    </div>
+                </div>
+                <div class="knob-grid" style="grid-template-columns:repeat(3,1fr)">
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="SAMPLER" data-param="start"><div class="indicator"></div></div>
+                        <div class="label">Start</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="SAMPLER" data-param="end"><div class="indicator"></div></div>
+                        <div class="label">End</div>
+                    </div>
+                    <div class="knob-wrap">
+                        <div class="knob mini-knob" data-osc="SAMPLER" data-param="pitch"><div class="indicator"></div></div>
+                        <div class="label">Pitch</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP SEQUENCER -->
+        <div class="seq-section card">
+            <div class="card-title">Module 2 & 4: 16-Step Sequencer</div>
+            <div class="module-status">MASTER PICO W | ARPEGGIATOR | PATTERN CONTROL</div>
+            <div class="seq-controls">
+                <div class="input-group">
+                    <label>Pattern</label>
+                    <select class="pattern-select" id="patternSelect">
+                        <option>Pattern 1</option>
+                        <option>Pattern 2</option>
+                        <option>Pattern 3</option>
+                        <option>Pattern 4</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Steps</label>
+                    <input type="number" min="4" max="32" value="16" id="stepsInput">
+                </div>
+                <button class="btn" id="clearSeq">Clear</button>
+                <button class="btn" id="randomSeq">Random</button>
+                <button class="btn" id="arpBtn">Arpeggiator</button>
+            </div>
+            <div class="step-grid" id="stepGrid"></div>
+        </div>
+
+        <!-- MIXER & OSCILLOSCOPE MODULE -->
+        <div class="mixer-section card">
+            <div class="card-title">Module 5: Mixer & Oscilloscope</div>
+            <div class="module-status">AUDIO MIXING | TFT DISPLAY | WAVEFORM VISUALIZATION</div>
+            <div class="mixer">
+                <div class="channel">
+                    <div class="channel-name">SYNTH</div>
+                    <div class="meter">
+                        <div class="meter-fill" style="height:65%"></div>
+                    </div>
+                    <div class="fader-track">
+                        <div class="fader-thumb" style="top:35%"></div>
+                    </div>
+                    <div class="mute-solo">
+                        <button class="mute-btn" title="Mute">M</button>
+                        <button class="solo-btn" title="Solo">S</button>
+                    </div>
+                </div>
+                <div class="channel">
+                    <div class="channel-name">DRUMS</div>
+                    <div class="meter">
+                        <div class="meter-fill" style="height:45%"></div>
+                    </div>
+                    <div class="fader-track">
+                        <div class="fader-thumb" style="top:55%"></div>
+                    </div>
+                    <div class="mute-solo">
+                        <button class="mute-btn" title="Mute">M</button>
+                        <button class="solo-btn" title="Solo">S</button>
+                    </div>
+                </div>
+                <div class="channel">
+                    <div class="channel-name">SAMPLE</div>
+                    <div class="meter">
+                        <div class="meter-fill" style="height:30%"></div>
+                    </div>
+                    <div class="fader-track">
+                        <div class="fader-thumb" style="top:70%"></div>
+                    </div>
+                    <div class="mute-solo">
+                        <button class="mute-btn" title="Mute">M</button>
+                        <button class="solo-btn" title="Solo">S</button>
+                    </div>
+                </div>
+                <div class="channel">
+                    <div class="channel-name">VOCODER</div>
+                    <div class="meter">
+                        <div class="meter-fill" style="height:25%"></div>
+                    </div>
+                    <div class="fader-track">
+                        <div class="fader-thumb" style="top:75%"></div>
+                    </div>
+                    <div class="mute-solo">
+                        <button class="mute-btn" title="Mute">M</button>
+                        <button class="solo-btn" title="Solo">S</button>
+                    </div>
+                </div>
+                <div class="channel">
+                    <div class="channel-name">MASTER</div>
+                    <div class="meter">
+                        <div class="meter-fill" style="height:80%"></div>
+                    </div>
+                    <div class="fader-track">
+                        <div class="fader-thumb" style="top:20%"></div>
+                    </div>
+                    <div class="mute-solo">
+                        <button class="mute-btn" title="Mute">M</button>
+                    </div>
+                </div>
+            </div>
+            <div class="oscilloscope">
+                <div class="scope-display" id="scopeDisplay">
+                    <div class="waveform-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EFFECTS -->
+        <div class="fx-section card">
+            <div class="card-title">Module 3 & 5: Effects & Processing</div>
+            <div class="module-status">ANALOG FILTERS | DIGITAL EFFECTS | REAL-TIME PROCESSING</div>
+            <div class="fx-grid">
+                <div class="fx-unit">
+                    <div class="fx-header">
+                        <div class="fx-name">VCF FILTER</div>
+                        <div class="fx-toggle on"></div>
+                    </div>
+                    <div class="fx-params">
+                        <div class="fx-param">
+                            <div class="knob-wrap">
+                                <div class="knob mini-knob" data-fx="filter" data-param="cutoff"><div class="indicator"></div></div>
+                                <div class="label">Cutoff</div>
+                            </div>
+                        </div>
+                        <div class="fx-param">
+                            <div class="knob-wrap">
+                                <div class="knob mini-knob" data-fx="filter" data-param="resonance"><div class="indicator"></div></div>
+                                <div class="label">Resonance</div>
+                            </div>
+                        </div>
+                        <div class="fx-param">
+                            <div class="knob-wrap">
+                                <div class="knob mini-knob" data-fx="filter" data-param="drive"><div class="indicator"></div></div>
+                                <div class="label">Drive</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fx-unit">
+                    <div class="fx-header">
+                        <div class="fx-name">DELAY</div>
+                        <div class="fx-toggle on"></div>
+                    </div>
+                    <div class="fx-params">
+                        <div class="fx-param">
+                            <div class="knob-wrap">
+                                <div class="knob mini-knob" data-fx="delay" data-param="time"><div class="indicator"></div></div>
+                                <div class="label">Time</div>
+                            </div>
+                        </div>
+                        <div class="fx-param">
+                            <div class="knob-wrap">
+                                <div class="knob mini-knob" data-fx="delay" data-param="feedback"><div class="indicator"></div></div>
+                                <div class="label">FB</div>
+                            </div>
+                        </div>
+                        <div class="fx-param">
+                            <div class="knob-wrap">
+                                <div class="knob mini-knob" data-fx="delay" data-param="mix"><div class="indicator"></div></div>
+                                <div class="label">Mix</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fx-unit">
+                    <div class="fx-header">
+                        <div class="fx-name">REVERB</div>
+                        <div class="fx-toggle"></div>
+                    </div>
+                    <div class="fx-params">
+                        <div class="fx-param">
+                            <div class="knob-wrap">
+                                <div class="knob mini-knob" data-fx="reverb" data-param="size"><div class="indicator"></div></div>
+                                <div class="label">Size</div>
+                            </div>
+                        </div>
+                        <div class="fx-param">
+                            <div class="knob-wrap">
+                                <div class="knob mini-knob" data-fx="reverb" data-param="damp"><div class="indicator"></div></div>
+                                <div class="label">Damp</div>
+                            </div>
+                        </div>
+                        <div class="fx-param">
+                            <div class="knob-wrap">
+                                <div class="knob mini-knob" data-fx="reverb" data-param="mix"><div class="indicator"></div></div>
+                                <div class="label">Mix</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KEYBOARD & MASTER CONTROL -->
+        <div class="kbd-section card">
+            <div class="card-title">Module 4: Master Control & Keyboard</div>
+            <div class="module-status">PICO W | WEB SERVER | MIDI USB | TEMPO CONTROL</div>
+            <div class="piano-wrap">
+                <div class="piano" id="piano"></div>
+            </div>
+            <div class="master-controls">
+                <div class="input-group">
+                    <label>Tempo</label>
+                    <input type="number" id="tempoInput" value="120" min="40" max="240">
+                </div>
+                <div class="input-group">
+                    <label>Swing</label>
+                    <input type="range" id="swingSlider" min="0" max="100" value="50">
+                </div>
+                <button class="btn" id="savePatch">Save Patch</button>
+                <button class="btn" id="loadPatch">Load Patch</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="JS.js"></script>
+</body>
+</html>
