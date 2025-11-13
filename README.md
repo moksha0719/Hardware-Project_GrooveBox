@@ -22,5 +22,7 @@ cd hardware-groovebox
 npm install
 npm start
 ```
+Open your browser to: http://localhost:3001 
+
 ## ESP32 Support
 Includes examples for ESP32 hardware control via HTTP API.
